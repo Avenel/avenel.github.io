@@ -1,0 +1,114 @@
+<dom-module id="haushaltsbuch-ausgaben">
+  <style>
+    .expenseListWrapper {
+      margin-top: 15px;
+      padding: 15px;
+      margin-top: 50px;
+    }
+
+    .expenseInputContainer {
+      width: 85%;
+      margin: 5% auto;
+      text-align: center;
+    }
+
+    .expenseList {
+      overflow: hidden;
+      font-weight: 300;
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 400;
+    }
+
+    b {
+      font-weight: 400;
+    }
+  </style>
+  <template>
+    <h1>Ausgaben</h1>
+
+    <iron-localstorage
+      id="localstorage"
+      name="expenses"
+      value="{{expenses}}"
+    ></iron-localstorage>
+
+    <div class="expenseInputContainer">
+      <template is="dom-repeat" items="[[expenses]]">
+        <paper-material class="expenseListWrapper">
+          <p><b>[[_parseDate(item.date)]]</b><b>: </b><b>[[_computeShoppingPlace(item.place)]]</b></p>
+          <iron-list items="{{item.expenses}}" as="item" class="expenseList">
+            <template>
+                <div class="item horizontal layout around justified wrap">
+                  <div>{{item.amount}}<span>x</span></div>
+                  <div>{{item.price}}<span>€</span></div>
+                  <div>{{item.product.name}}</div>
+                  <div>{{item.total}}<span>€</span></div>
+                </div>
+            </template>
+          </iron-list>
+          <p style="text-align: right; font-size:x-large;"><b>[[item.total]]</b><b>€</b></p>
+        </paper-material>
+      </template>
+
+      <paper-button id="clearCache" on-tap="clearCache">Clear Cache</paper-button>
+      <paper-button id="reload" on-tap="reload">Aktualisieren</paper-button>
+    </div>
+  </template>
+
+<script>
+(function() {
+  Polymer({
+    is: 'haushaltsbuch-ausgaben',
+
+    properties: {
+      expenses : {
+        type: Array,
+        observer: "_expensesChanged"
+      }
+    },
+
+    _expensesChanged: function() {
+      console.log("expenses", this.expenses);
+    },
+
+    _parseDate : function(dateString) {
+      var d = new Date(dateString);
+      console.log(d, dateString);
+      var year = d.getFullYear();
+      var month = d.getMonth()+1;
+      var day = d.getDate();
+      var hour = d.getHours();
+
+      return  day  + "." + month + "." + year;
+    },
+
+    _computeShoppingPlace : function(expensePlace) {
+      if (expensePlace) {
+          return expensePlace.shop + ", " + expensePlace.town;
+      } else {
+        return "TBA";
+      }
+    },
+
+    ready : function() {
+    },
+
+    attached : function() {
+    },
+
+    clearCache : function() {
+      this.expenses = [];
+      this.$.localstorage.save();
+    },
+
+    reload : function() {
+      this.$.localstorage.reload();
+    }
+  });
+})();
+</script>
+
+</dom-module>

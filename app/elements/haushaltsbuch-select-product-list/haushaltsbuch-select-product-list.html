@@ -1,0 +1,108 @@
+<dom-module id="haushaltsbuch-select-product-list">
+<style>
+
+.expenseInputContainer {
+  width: 90%;
+  margin: 15px auto;
+}
+
+.item {
+  border-bottom-color: rgb(221, 221, 221);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+
+  display: flex;
+  flex-direction: row;
+  font-family: Roboto, Noto, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 16px 16px;
+}
+
+</style>
+  <template>
+    <iron-list items="{{filteredProducts}}" as="item" id="productList">
+      <template>
+        <div class="item" on-click="selectProduct">
+          <paper-ripple></paper-ripple>
+          <span>[[item.name]]</span>
+        </div>
+      </template>
+    </iron-list>
+  </template>
+
+<script>
+(function() {
+  Polymer({
+    is: 'haushaltsbuch-select-product-list',
+
+    properties: {
+      product : {
+        type: Object,
+        notify: true
+      },
+
+      productInput : {
+        type: String,
+        observer: '_productInputChanged'
+      },
+
+      filteredProducts : {
+        type: Array,
+        computed: 'filterProducts(productInput)'
+      },
+
+      productList : {
+        type: Array,
+        value: [
+          {"name": "Haribo Vampire", "category": "Lebensmittel", "subcategory": "Süßigkeiten"},
+          {"name": "Schokokekse", "category": "Lebensmittel", "subcategory": "Süßigkeiten"},
+          {"name": "Lindt Schokolade", "category": "Lebensmittel", "subcategory": "Süßigkeiten"},
+          {"name": "Nimm' 2", "category": "Lebensmittel", "subcategory": "Süßigkeiten"},
+          {"name": "Kaffee", "category": "Lebensmittel", "subcategory": "Getränke"},
+          {"name": "Cola", "category": "Lebensmittel", "subcategory": "Getränke"},
+          {"name": "Nachttisch", "category": "Möbel", "subcategory": "Schlafzimmer"},
+          {"name": "Spülmaschine", "category": "Möbel", "subcategory": "Küche"},
+        ]
+      }
+    },
+
+    ready : function() {
+    },
+
+    attached : function() {
+    },
+
+    _productInputChanged : function() {
+      if (this.productInput != null && this.productInput != "") {
+        $(this.$.productList).show();
+      } else {
+        $(this.$.productList).hide();
+      }
+    },
+
+    filterProducts(productInput) {
+      // first filter all product that matches category (subcategory), then name
+      var filteredList = this.productList.map(function(p, index) {
+          if (productInput != null && productInput != "") {
+            var re = RegExp(productInput, "i");
+            var found = p.name.match(re);
+            return (found != null)? p : null;
+          } else {
+            return p;
+          }
+      });
+
+      return filteredList;
+    },
+
+    selectProduct : function(e) {
+      this.product = e.model.item;
+      $(this.$.productList).hide();
+    }
+  });
+})();
+</script>
+
+</dom-module>

@@ -1,0 +1,39 @@
+<dom-module id="haushaltsbuch-select-arrow-next-step">
+  <style>
+
+  #next_step {
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+  }
+
+  </style>
+  <template>
+    <paper-fab icon="arrow-forward" id="next_step"></paper-fab>
+  </template>
+
+<script>
+(function() {
+  Polymer({
+    is: 'haushaltsbuch-select-arrow-next-step',
+
+    properties: {
+      selected : {
+        type: Number,
+        notify: true
+      }
+    },
+
+    ready : function() {
+      this.$.next_step.addEventListener("click", this._nextStep.bind(this));
+    },
+
+    _nextStep: function() {
+      this.selected += 1;
+    }
+  });
+})();
+</script>
+
+
+</dom-module>

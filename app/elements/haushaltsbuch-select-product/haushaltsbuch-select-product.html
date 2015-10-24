@@ -1,0 +1,332 @@
+<dom-module id="haushaltsbuch-select-product">
+<style>
+
+  .expenseInputContainer {
+    width: 85%;
+    margin: 5% auto;
+  }
+
+  #productAmountInput {
+    width: 50px
+  }
+
+  #productInputWrapper {
+    padding: 15px;
+  }
+
+  #productPriceInput {
+    width: 50px
+  }
+
+  #productPriceTotal {
+    font-size: xx-large;
+    font-weight: 300;
+    padding-top: 3px;
+  }
+
+  #productInput, #productInputTable {
+    width: 100%;
+  }
+
+  .item {
+    padding-top: 15px;
+    font-weight: 300;
+  }
+
+  #expenseListWrapper {
+    margin-top: 15px;
+    padding: 15px;
+    margin-top: 50px;
+  }
+
+  #submitShoppingListButton {
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+  }
+
+  #openAddExpenseDialogButton {
+    margin-top: 5%;
+  }
+
+  #modal {
+    top: 1% !important;
+    min-width: 350px;
+  }
+
+  #addExpenseActions {
+    float: right;
+  }
+
+  #selectCategoryIconWrapper {
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    color: white;
+    height: 60px;
+    width: 60px;
+    line-height: 64px;
+    margin: 0 auto;
+  }
+
+  #selectCategoryButtonWrapper {
+    text-align: center;
+  }
+
+  #selectCategoryNameWrapper {
+    font-size: small;
+    font-weight: 300;
+    margin-top: 5px;
+  }
+
+  :host {
+    background: white;
+  }
+</style>
+  <template>
+    <!-- Produkt Eingabe -->
+    <neon-animated-pages id="pages" selected="{{selected}}" class="expenseInputContainer">
+      <neon-animatable style="text-align: center;">
+        <paper-button id="openAddExpenseDialogButton" raised>
+          <iron-icon icon="add"></iron-icon> Ausgaben hinzufügen
+        </paper-button>
+
+        <div class="expenseInputContainer">
+          <paper-material id="expenseListWrapper">
+            <iron-list items="{{expenseList}}" as="item" id="expenseList">
+              <template>
+                  <div class="item horizontal layout around justified wrap">
+                    <div>{{item.amount}}<span>x</span></div>
+                    <div>{{item.price}}<span>€</span></div>
+                    <div>{{item.product.name}}</div>
+                    <div>{{item.total}}<span>€</span></div>
+                  </div>
+              </template>
+            </iron-list>
+          </paper-material>
+        </div>
+        <paper-fab icon="check" id="submitShoppingListButton"></paper-fab>
+      </neon-animatable>
+
+      <neon-animatable>
+        <table id="productInputTable">
+          <tr><td><paper-input id="productInput" value="{{productInput}}"></paper-input></td>
+            <td>
+              <div id="selectCategoryButtonWrapper" on-tap="openSelectCategory">
+                <paper-material id="selectCategoryIconWrapper">
+                  <paper-ripple class="style-scope paper-fab"></paper-ripple>
+                  <table style="width: 100%;">
+                    <tr><td style="text-align: center;">
+                      <polymer-fontawesome icon="[[productCategory.icon]]" size="2x"></polymer-fontawesome>
+                    </td></tr>
+                  </table>
+                </paper-material>
+                <div id="selectCategoryButtonWrapper">[[productCategory.name]]</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <haushaltsbuch-select-product-list product-input="[[productInput]]" product="{{product}}" category="[[category]]" sub-Category="[[subCategory]]"></haushaltsbuch-select-product-list>
+            </td>
+          </tr>
+        </table>
+        <div class="item horizontal layout around justified wrap">
+          <paper-input id="productAmountInput" value="{{productAmount}}" type="number">
+            <div suffix>x</div>
+          </paper-input>
+          <paper-input id="productPriceInput" value="{{productPrice}}" type="number">
+            <div suffix>€</div>
+          </paper-input>
+          <div id="productPriceTotal">{{productTotal}}<span>€</span></div>
+        </div>
+
+        <div class="buttons" id="addExpenseActions">
+          <paper-button id="cancelAddExpense">Abbrechen</paper-button>
+          <paper-button id="addExpenseButton" autofocus>Hinzufügen</paper-button>
+        </div>
+      </neon-animatable>
+
+      <neon-animatable>
+        <haushaltsbuch-select-category category="{{productCategory}}" categories="{{productCategories}}"></haushaltsbuch-select-category>
+      </neon-animatable>
+    </neon-animated-pages>
+
+  </template>
+
+<script>
+(function() {
+  Polymer({
+    is: 'haushaltsbuch-select-product',
+
+    properties: {
+      productInput : {
+        type: String,
+        observer: '_productInputChanged'
+      },
+
+      productAmount : {
+        type: Number
+      },
+
+      productPrice : {
+        type: Number
+      },
+
+      productCategory : {
+        type: Object,
+        observer: '_productCategoryChanged',
+        value: {name: "Kategorie", icon: "square-o"}
+      },
+
+      productCategories : {
+        type: Array
+      },
+
+      productTotal : {
+        type: Number,
+        computed: '_computeTotal(productAmount, productPrice)'
+      },
+
+      product : {
+        type: Object,
+        observer: '_productChanged',
+        value: {name: ""}
+      },
+
+      expenseList : {
+        type: Array,
+        value: [],
+        notify: true
+      },
+
+      buttonFunctionIcon : {
+        type: String,
+        value: "add"
+      },
+
+      expenses : {
+        type: Array
+      },
+
+      checkout : {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+
+      selected: {
+        type: Number,
+        value: 0
+      }
+    },
+
+    ready : function() {
+      this.$.productInput.addEventListener("focus", this.toggleIconToAdd.bind(this));
+      this.$.productInput.addEventListener("blur", this.toggleIconToCheck.bind(this));
+
+      this.$.productAmountInput.addEventListener("focus", this.toggleIconToAdd.bind(this));
+      this.$.productAmountInput.addEventListener("blur", this.toggleIconToCheck.bind(this));
+
+      this.$.productPriceInput.addEventListener("focus", this.toggleIconToAdd.bind(this));
+      this.$.productPriceInput.addEventListener("blur", this.toggleIconToCheck.bind(this));
+
+
+      this.$.submitShoppingListButton.addEventListener("click", this.submitShoppingList.bind(this));
+      this.$.openAddExpenseDialogButton.addEventListener("click", this.openAddExpenseDialog.bind(this));
+      this.$.addExpenseButton.addEventListener("click", this.addExpense.bind(this));
+
+      this.$.cancelAddExpense.addEventListener("click", this.cancelAddExpense.bind(this));
+    },
+
+    attached : function() {
+    },
+
+    _productInputChanged : function() {
+    },
+
+    _productChanged : function() {
+      var category = {name:"Kategorie", icon:"square-o"};
+      if (this.product) {
+        this.productInput = this.product.name;
+
+        if (this.productCategories) {
+          for (var i=0; i<this.productCategories.length; i++) {
+            if (this.productCategories[i].name == this.product.category) {
+              category = JSON.parse(JSON.stringify(this.productCategories[i]));
+              break;
+            }
+          }
+        }
+      }
+
+      this.productCategory = category;
+    },
+
+    _productCategoryChanged : function() {
+      if (this.selected = 2) {
+        this.selected = 1;
+      }
+    },
+
+    _computeTotal : function(productAmount, productPrice) {
+      return Math.floor(productAmount * productPrice * 100) / 100;
+    },
+
+    selectProduct : function(e) {
+      var model = e.model;
+      this.product = { "name" : e.model.item };
+    },
+
+    toggleIconToAdd : function() {
+      this.buttonFunctionIcon = "add";
+    },
+
+    toggleIconToCheck : function() {
+      this.buttonFunctionIcon = "check";
+    },
+
+    addExpense : function() {
+      // füge product hinzu
+      console.log(this.product);
+      if (this.product && this.product.name == "" && this.productInput != "") {
+        this.product.name = this.productInput;
+      } else {
+        // zeige hinweis
+      }
+
+      if (this.product) {
+        this.product.category = this.productCategory;
+
+        console.log("product", this.product);
+        this.push('expenseList', {"amount" : this.productAmount, "price" : this.productPrice, "product" : this.product, "total" : this.productTotal});
+
+        this.productAmount = null;
+        this.productPrice = null;
+        this.product = {"name" : ""};
+        this.productTotal = null;
+        this.productCategory = null;
+
+        this.selected = 0;
+      }
+    },
+
+    openAddExpenseDialog : function() {
+      this.selected = 1;
+    },
+
+    openSelectCategory : function() {
+      this.selected = 2;
+    },
+
+    cancelAddExpense: function() {
+      this.selected = 0;
+    },
+
+    submitShoppingList : function() {
+      this.checkout = true;
+    }
+  });
+})();
+</script>
+
+</dom-module>

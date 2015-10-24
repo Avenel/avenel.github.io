@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="../../styles/font-awesome-4.4.0/css/font-awesome.min.css">
+
+<dom-module id="haushaltsbuch-select-category-button">
+  <style>
+    #iconWrapper {
+      border-radius: 50%;
+      background-color: var(--accent-color);
+      color: white;
+      height: 60px;
+      width: 60px;
+      line-height: 64px;
+      margin: 0 auto;
+    }
+
+    #buttonWrapper {
+      text-align: center;
+      width: 70px;
+      margin: 15px;
+    }
+
+    #nameWrapper {
+      font-size: small;
+      font-weight: 300;
+      margin-top: 5px;
+    }
+  </style>
+
+  <template>
+    <div id="buttonWrapper">
+      <paper-material id="iconWrapper">
+        <paper-ripple class="style-scope paper-fab"></paper-ripple>
+        <table style="width: 100%;">
+          <tr><td style="text-align: center;">
+            <polymer-fontawesome icon="[[icon]]" size="2x"></polymer-fontawesome>
+          </td></tr>
+        </table>
+      </paper-material>
+      <div id="nameWrapper">{{name}}</div>
+    </div>
+  </template>
+
+<script>
+(function() {
+  Polymer({
+    is: 'haushaltsbuch-select-category-button',
+
+    properties: {
+      icon : {
+        type: String,
+      },
+
+      name: {
+        type: String
+      }
+    },
+
+    ready : function() {
+    },
+
+    attached : function() {
+    }
+
+  });
+})();
+</script>
+
+</dom-module>

@@ -1,0 +1,39 @@
+<dom-module id="haushaltsbuch-select-price">
+<style>
+</style>
+  <template>
+    <h1>Was hast du ausgegeben?:</h1>
+
+    <!-- Preis Eingabe -->
+        <div>
+          <table class="expenseInputContainer">
+            <tr>
+              <td><paper-fab mini icon="payment" id="toggle_amount"></paper-fab></td>
+              <td><paper-input id="expenseAmount_input" value="0,66" auto-validate pattern="[0-9]*,[0-9]+"
+                error-message="Bitte gebe einen gültigen Betrag ein!">
+                <div suffix>€</div>
+              </paper-input></td>
+            </tr>
+          </table>
+        </div>
+
+  </template>
+
+<script>
+(function() {
+  Polymer({
+    is: 'haushaltsbuch-select-price',
+
+    properties: {
+    },
+
+    ready : function() {
+    },
+
+    attached : function() {
+    }
+  });
+})();
+</script>
+
+</dom-module>

@@ -1,0 +1,81 @@
+<link rel="stylesheet" href="../../styles/font-awesome-4.4.0/css/font-awesome.min.css">
+
+<dom-module id="polymer-fontawesome">
+<style>
+</style>
+
+  <template>
+    <i class$="{{computeClass}}"></i>
+  </template>
+
+<script>
+(function() {
+  Polymer({
+    is: 'polymer-fontawesome',
+
+    properties: {
+      icon : {
+        type: String
+      },
+
+      animation: {
+        type: String
+      },
+
+      size: {
+        type: String
+      },
+
+      rotate: {
+        type: String
+      },
+
+      flip: {
+        type: Boolean
+      },
+
+      inverse: {
+        type: Boolean
+      },
+
+      stack: {
+        type: String
+      },
+
+      pull_left: {
+        type: Boolean
+      },
+
+      border: {
+        type: Boolean
+      },
+
+      computeClass: {
+        type: String,
+        computed: '_computeClass(icon)'
+      }
+    },
+
+    ready : function() {
+
+    },
+
+    attached : function() {
+    },
+
+    _computeClass: function() {
+      return "fa fa-" + this.icon + " " +
+          (this.animation ? 'fa-' + 'animation' : '') + " " +
+          (this.size ? 'fa-' + this.size : '') + " " +
+          (this.rotate ? 'fa-rotate-' + this.rotate : '') + " " +
+          (this.flip ? 'fa-flip-' + this.flip : '') + " " +
+          (this.inverse ? 'fa-inverse' : '') + " " +
+          (this.stack ? 'fa-stack-' + this.stack : '') +
+          (this.pull_left ? 'pull-left' : '') + " " +
+          (this.border ? 'fa-border' : '');
+    }
+  });
+})();
+</script>
+
+</dom-module>
