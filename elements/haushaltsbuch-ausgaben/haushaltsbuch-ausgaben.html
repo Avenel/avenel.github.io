@@ -101,7 +101,7 @@
 
     clearCache : function() {
       this.expenses = [];
-      this.$.localstorage.save();
+      localStorage.removeItem("expenses");
     },
 
     reload : function() {
