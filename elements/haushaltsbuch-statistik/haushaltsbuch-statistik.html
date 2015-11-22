@@ -1,8 +1,36 @@
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
+
 <dom-module id="haushaltsbuch-statistik">
   <style>
+    #chart {
+      width: 100%;
+      height: 70%;
+    }
+
+    #expenseStatisticContainer{
+      width: 85%;
+      margin: 5% auto;
+      text-align: center;
+    }
   </style>
   <template>
 
+    <iron-localstorage
+      id="localstorage"
+      name="expenses"
+      value="{{expenses}}"
+    ></iron-localstorage>
+
+    <div id="expenseStatisticContainer">
+
+      <google-chart
+        id ="chart"
+        type='column'>
+      </google-chart>
+
+      <paper-button id="reload" on-tap="reload">Aktualisieren</paper-button>
+
+    </div>
   </template>
 
 <script>
@@ -11,12 +39,61 @@
     is: 'haushaltsbuch-statistik',
 
     properties: {
+      expenses: {
+        type: Array,
+        observer: '_expensesChanged'
+      },
+
+      data : {
+        type : Array,
+        observer: '_dataChanged'
+      },
+
+      isAttached : {
+        type : Boolean
+      }
+    },
+
+    _expensesChanged: function() {
+      var data = [];
+      this.expenses.forEach(function(elem, i) {
+        elem.expenses.forEach(function(exp, j) {
+          var expArr = [];
+          expArr.push(exp.product.category.name);
+          expArr.push(parseFloat(exp.price));
+          data.push(expArr);
+        });
+      });
+
+      data.unshift(["Kategorie", "Preis"]);
+      this.data = data;
+      console.log(data);
+    },
+
+    _dataChanged: function() {
+      if (this.isAttached) {
+        this.$.chart.data = this.data;
+        this.$.chart.drawChart();
+      }
     },
 
     ready : function() {
     },
 
     attached : function() {
+      this.isAttached = true;
+      this.$.chart.options = {"title": "Ausgaben je Kategorie",
+                              "hAxis": {"title": "Categories"},
+                              "vAxis": {"title": "Values",
+                              "legend" : "none" }
+                            };
+
+      this.$.chart.data = this.data;
+    },
+
+
+    reload : function() {
+      this.$.localstorage.reload();
     }
   });
 })();

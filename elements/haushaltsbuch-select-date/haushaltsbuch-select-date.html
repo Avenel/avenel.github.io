@@ -14,13 +14,13 @@
         <haushaltsbuch-last-expenses id="last_expenses"></haushaltsbuch-last-expenses>
       </td>
     </tr>
-    <tr>
+    <!--<tr>
       <td align="center">
         <paper-button id="toggle_last_expenses" raised>
           <iron-icon icon="history"></iron-icon> Letzte Ausgaben
         </paper-button>
       </td>
-    </tr>
+    </tr> -->
     <tr>
       <td align="center">
         <paper-date-picker id="datePicker" date="{{expenseDate}}"></paper-date-picker>
@@ -53,7 +53,7 @@
     },
 
     ready : function() {
-      this.$.toggle_last_expenses.addEventListener("click", this._toggleLastExpenses.bind(this));
+      // this.$.toggle_last_expenses.addEventListener("click", this._toggleLastExpenses.bind(this));
     },
 
     attached : function() {
