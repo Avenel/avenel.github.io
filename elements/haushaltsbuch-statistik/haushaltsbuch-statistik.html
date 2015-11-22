@@ -56,7 +56,7 @@
 
     _expensesChanged: function() {
       var data = [];
-      if (this.expenses) {
+      if (this.expenses && this.expenses.length > 0) {
         this.expenses.forEach(function(elem, i) {
           elem.expenses.forEach(function(exp, j) {
             var expArr = [];
