@@ -45,11 +45,11 @@
                   <div>{{item.amount}}<span>x</span></div>
                   <div>{{item.price}}<span>€</span></div>
                   <div>{{item.product.name}}</div>
-                  <div>{{item.total}}<span>€</span></div>
+                  <div>{{_formatPrice(item.total)}}<span>€</span></div>
                 </div>
             </template>
           </iron-list>
-          <p style="text-align: right; font-size:x-large;"><b>[[item.total]]</b><b>€</b></p>
+          <p style="text-align: right; font-size:x-large;"><b>[[_formatPrice(item.total)]]</b><b>€</b></p>
         </paper-material>
       </template>
 
@@ -83,6 +83,10 @@
       var hour = d.getHours();
 
       return  day  + "." + month + "." + year;
+    },
+
+    _formatPrice : function(price) {
+      return parseFloat(price / 100).toFixed(2);
     },
 
     _computeShoppingPlace : function(expensePlace) {

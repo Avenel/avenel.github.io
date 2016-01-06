@@ -64,7 +64,7 @@
               categories[exp.product.category.name] = 0.0;
             }
 
-            categories[exp.product.category.name] += parseFloat(exp.total);
+            categories[exp.product.category.name] += parseFloat(productTotal / 100).toFixed(2);
           });
         });
 
