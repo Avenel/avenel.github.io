@@ -137,7 +137,7 @@
           <paper-input id="productPriceInput" value="{{productPrice}}" type="number">
             <div suffix>€</div>
           </paper-input>
-          <div id="productPriceTotal">{{productTotal}}<span>€</span></div>
+          <div id="productPriceTotal">{{_formatProductTotal(productTotal)}}<span>€</span></div>
         </div>
 
         <div class="buttons" id="addExpenseActions">
@@ -269,7 +269,11 @@
     },
 
     _computeTotal : function(productAmount, productPrice) {
-      return Math.floor(productAmount * productPrice * 100) / 100;
+      return parseInt(productAmount * productPrice * 100);
+    },
+
+    _formatProductTotal : function(productTotal) {
+      return parseFloat(productTotal).toFixed(2);
     },
 
     selectProduct : function(e) {
