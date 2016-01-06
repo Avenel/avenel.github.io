@@ -328,6 +328,8 @@
 
     submitShoppingList : function() {
       this.checkout = true;
+      var that = this;
+      setTimeout(function(){ that.checkout = false; }, 250);
     }
   });
 })();

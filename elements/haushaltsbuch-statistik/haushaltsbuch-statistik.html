@@ -56,18 +56,30 @@
 
     _expensesChanged: function() {
       var data = [];
+      var categories = new Map();
       if (this.expenses && this.expenses.length > 0) {
         this.expenses.forEach(function(elem, i) {
           elem.expenses.forEach(function(exp, j) {
-            var expArr = [];
-            expArr.push(exp.product.category.name);
-            expArr.push(parseFloat(exp.price));
-            data.push(expArr);
+            if (!categories.hasOwnProperty(exp.product.category.name)) {
+              categories[exp.product.category.name] = 0.0;
+            }
+
+            categories[exp.product.category.name] += parseFloat(exp.total);
           });
         });
 
+        for (var cat in categories) {
+          if (categories.hasOwnProperty(cat)) {
+            var expArr = [];
+            expArr.push(cat);
+            expArr.push(categories[cat]);
+            data.push(expArr);
+          }
+        }
+
         data.unshift(["Kategorie", "Preis"]);
         this.data = data;
+        console.log(categories);
         console.log(data);
       }
     },
