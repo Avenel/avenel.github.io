@@ -98,7 +98,7 @@
                     <div>{{item.amount}}<span>x</span></div>
                     <div>{{item.price}}<span>€</span></div>
                     <div>{{item.product.name}}</div>
-                    <div>{{item.total}}<span>€</span></div>
+                    <div>{{_formatProductTotal(item.total)}}<span>€</span></div>
                   </div>
               </template>
             </iron-list>
