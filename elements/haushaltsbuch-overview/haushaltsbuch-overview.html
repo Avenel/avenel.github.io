@@ -128,7 +128,7 @@
               categories[exp.product.category.name].total = 0.0;
               categories[exp.product.category.name].icon = exp.product.category.icon;
             }
-            categories[exp.product.category.name].total += parseFloat(exp.total / 100);
+            categories[exp.product.category.name].total += parseInt(exp.total);
           });
         });
 
