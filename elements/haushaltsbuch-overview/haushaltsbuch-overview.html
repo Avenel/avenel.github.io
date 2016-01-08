@@ -1,8 +1,30 @@
 <dom-module id="haushaltsbuch-overview">
   <style>
+    #cards {
+      @apply(--layout-vertical);
+      @apply(--center-justified);
+      margin-left: auto;
+      margin-right: auto;
+    }
   </style>
   <template>
-    
+    <iron-localstorage
+      id="localstorage"
+      name="expenses"
+      value="{{expenses}}"
+    ></iron-localstorage>
+
+    <paper-button id="reload" on-tap="reload">Aktualisieren</paper-button>
+
+    <div id="cards">
+      <template is="dom-repeat" items="[[cards]]" as="item">
+        <paper-material>
+          <b>{{item.name}}</b>
+          <b>{{item.total}}</b>
+        </paper-material>
+      </template>
+    </div>
+
   </template>
 
 <script>
@@ -14,6 +36,15 @@
       ausgabenGesamt: {
         type: Number,
         value: 0.0
+      },
+
+      expenses: {
+        type: Array,
+        observer: '_expensesChanged'
+      },
+
+      cards: {
+        type: Array
       }
     },
 
@@ -21,6 +52,35 @@
     },
 
     attached : function() {
+    },
+
+    _expensesChanged: function() {
+      this.cards = [];
+      var categories = new Map();
+      if (this.expenses && this.expenses.length > 0) {
+        this.expenses.forEach(function(elem, i) {
+          elem.expenses.forEach(function(exp, j) {
+            if (!categories.hasOwnProperty(exp.product.category.name)) {
+              categories[exp.product.category.name] = 0.0;
+            }
+            console.log(exp.total);
+            categories[exp.product.category.name] += parseFloat(exp.total / 100);
+          });
+        });
+
+        for (var cat in categories) {
+          if (categories.hasOwnProperty(cat)) {
+            var expCat = {};
+            expCat.name = cat;
+            expCat.total = categories[cat];
+            this.push('cards', expCat);
+          }
+        }
+      }
+    },
+
+    reload : function() {
+      this.$.localstorage.reload();
     }
   });
 })();
