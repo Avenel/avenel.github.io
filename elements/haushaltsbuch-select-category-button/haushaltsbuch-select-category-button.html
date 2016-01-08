@@ -51,10 +51,18 @@
 
       name: {
         type: String
+      },
+
+      noMargin: {
+        type: Boolean,
+        value: false
       }
     },
 
     ready : function() {
+      if (this.noMargin) {
+        $(this.$.buttonWrapper).css("margin", "0");
+      }
     },
 
     attached : function() {
