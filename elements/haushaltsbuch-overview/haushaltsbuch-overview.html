@@ -1,10 +1,65 @@
 <dom-module id="haushaltsbuch-overview">
   <style>
     #cards {
-      @apply(--layout-vertical);
-      @apply(--center-justified);
+      @apply(--layout-horizontal);
+      @apply(--layout-center-justified);
       margin-left: auto;
       margin-right: auto;
+    }
+
+    .categoryCard {
+      margin: 15px;
+      width: 132px;
+      height: 185px;
+      text-align: center;
+    }
+
+    .categoryCard .title {
+      position: absolute;
+      top: 30px;
+      left: 100px;
+      color: var(--paper-indigo-500);
+    }
+
+    .categoryCard img {
+      width: 100%;
+    }
+
+    .categoryCard .big {
+      font-size: 22px;
+      padding: 8px 0 16px;
+      color: var(--google-grey-500);
+    }
+
+    .categoryCard .medium {
+      font-size: 16px;
+      padding-bottom: 8px;
+    }
+
+    .avatar {
+      display: inline-block;
+      height: 64px;
+      width: 64px;
+      border-radius: 50%;
+      background: var(--paper-pink-500);
+      color: white;
+      line-height: 64px;
+      font-size: 30px;
+      text-align: center;
+    }
+
+    .total {
+        font-size: xx-large;
+    }
+
+    #cardsContainer {
+      width: 85%;
+      margin: 5% auto;
+      text-align: center;
+    }
+
+    #buttonWrapper.haushaltsbuch-select-category-button {
+      margin: 0;
     }
   </style>
   <template>
@@ -14,17 +69,21 @@
       value="{{expenses}}"
     ></iron-localstorage>
 
-    <paper-button id="reload" on-tap="reload">Aktualisieren</paper-button>
+    <div id="cardsContainer">
 
-    <div id="cards">
-      <template is="dom-repeat" items="[[cards]]" as="item">
-        <paper-material>
-          <b>{{item.name}}</b>
-          <b>{{item.total}}</b>
-        </paper-material>
-      </template>
+      <div id="cards">
+        <template is="dom-repeat" items="[[cards]]" as="item">
+          <paper-card  class="categoryCard">
+            <div class="card-content">
+              <haushaltsbuch-select-category-button icon="[[item.icon]]" name="[[item.name]]"></haushaltsbuch-select-category-button>
+              <div class="total">{{item.total}}<span>€</span></div>
+            </div>
+          </paper-card>
+        </template>
+      </div>
+
+      <paper-button id="reload" on-tap="reload">Aktualisieren</paper-button>
     </div>
-
   </template>
 
 <script>
@@ -61,10 +120,11 @@
         this.expenses.forEach(function(elem, i) {
           elem.expenses.forEach(function(exp, j) {
             if (!categories.hasOwnProperty(exp.product.category.name)) {
-              categories[exp.product.category.name] = 0.0;
+              categories[exp.product.category.name] = {};
+              categories[exp.product.category.name].total = 0.0;
+              categories[exp.product.category.name].icon = exp.product.category.icon;
             }
-            console.log(exp.total);
-            categories[exp.product.category.name] += parseFloat(exp.total / 100);
+            categories[exp.product.category.name].total += parseFloat(exp.total / 100);
           });
         });
 
@@ -72,7 +132,8 @@
           if (categories.hasOwnProperty(cat)) {
             var expCat = {};
             expCat.name = cat;
-            expCat.total = categories[cat];
+            expCat.total = categories[cat].total;
+            expCat.icon = categories[cat].icon;
             this.push('cards', expCat);
           }
         }
