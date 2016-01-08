@@ -80,7 +80,7 @@
           <paper-card  class="categoryCard">
             <div class="card-content">
               <haushaltsbuch-select-category-button icon="[[item.icon]]" name="[[item.name]]" no-margin></haushaltsbuch-select-category-button>
-              <div class="total">{{item.total}}<span>€</span></div>
+              <div class="total">{{_formatPrice(item.total)}}<span>€</span></div>
             </div>
           </paper-card>
         </template>
@@ -142,6 +142,10 @@
           }
         }
       }
+    },
+
+    _formatPrice : function(price) {
+      return parseFloat(price / 100).toFixed(2);
     },
 
     reload : function() {
