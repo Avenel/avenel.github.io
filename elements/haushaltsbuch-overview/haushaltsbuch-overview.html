@@ -52,6 +52,11 @@
         font-size: xx-large;
     }
 
+    h1 {
+      text-align: center;
+      font-weight: 400;
+    }
+
     #cardsContainer {
       width: 85%;
       margin: 5% auto;
@@ -70,6 +75,8 @@
     ></iron-localstorage>
 
     <div id="cardsContainer">
+
+      <h1>Übersicht</h1>
 
       <div id="cards">
         <template is="dom-repeat" items="[[cards]]" as="item">
