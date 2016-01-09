@@ -53,6 +53,15 @@
         margin-top: 5px;
     }
 
+    #total {
+      font-size: x-large;
+    }
+
+    #totalCard {
+      width: 100%;
+      height: 130px;
+    }
+
     h1 {
       text-align: center;
       font-weight: 400;
@@ -63,6 +72,8 @@
       margin: 5% auto;
       text-align: center;
     }
+
+
   </style>
   <template>
     <iron-localstorage
@@ -74,6 +85,13 @@
     <div id="cardsContainer">
 
       <h1>Übersicht</h1>
+
+      <paper-card  id = "totalCard">
+        <div class="card-content">
+          <haushaltsbuch-select-category-button icon="shopping-basket" name="Gesamt" no-margin></haushaltsbuch-select-category-button>
+          <div id="total">{{_formatPrice(ausgabenGesamt)}}<span>€</span></div>
+        </div>
+      </paper-card>
 
       <div id="cards">
         <template is="dom-repeat" items="[[cards]]" as="item">
@@ -119,7 +137,10 @@
 
     _expensesChanged: function() {
       this.cards = [];
+      this.ausgabenGesamt = 0;
       var categories = new Map();
+      var that = this;
+
       if (this.expenses && this.expenses.length > 0) {
         this.expenses.forEach(function(elem, i) {
           elem.expenses.forEach(function(exp, j) {
@@ -129,6 +150,7 @@
               categories[exp.product.category.name].icon = exp.product.category.icon;
             }
             categories[exp.product.category.name].total += parseInt(exp.total);
+            that.ausgabenGesamt += parseInt(exp.total);
           });
         });
 

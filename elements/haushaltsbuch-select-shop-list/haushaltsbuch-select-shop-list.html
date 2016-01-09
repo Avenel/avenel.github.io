@@ -78,7 +78,7 @@
     },
 
     selectShop : function(e) {
-      this.expensePlace = e.model.item;
+      this.expensePlace = JSON.parse(JSON.stringify(e.model.item));
     },
 
     addExpensePlace : function (expensePlace) {

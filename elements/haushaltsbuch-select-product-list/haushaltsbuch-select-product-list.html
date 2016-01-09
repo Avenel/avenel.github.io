@@ -22,6 +22,15 @@
 
 </style>
   <template>
+
+    <iron-localstorage
+      name="productList"
+      value="{{productList}}"
+      on-iron-localstorage-load-empty="initializeDefaultProducts"
+      id="productListStorage"
+    ></iron-localstorage>
+
+
     <iron-list items="{{filteredProducts}}" as="item" id="productList">
       <template>
         <div class="item" on-click="selectProduct">
@@ -53,7 +62,7 @@
         computed: 'filterProducts(productInput)'
       },
 
-      productList : {
+      defaultProductList : {
         type: Array,
         value: [
           {"name": "Haribo Vampire", "category": "Lebensmittel", "subcategory": "Süßigkeiten"},
@@ -84,6 +93,10 @@
 
     filterProducts(productInput) {
       // first filter all product that matches category (subcategory), then name
+      if (!this.productList) {
+        this.$.productListStorage.reload();
+      }
+
       var filteredList = this.productList.map(function(p, index) {
           if (productInput != null && productInput != "") {
             var re = RegExp(productInput, "i");
@@ -98,8 +111,17 @@
     },
 
     selectProduct : function(e) {
-      this.product = e.model.item;
+      this.product = JSON.parse(JSON.stringify(e.model.item));
       $(this.$.productList).hide();
+    },
+
+    saveProduct : function(product) {
+      this.push("productList", product);
+      this.product = JSON.parse(JSON.stringify(product));
+    },
+
+    initializeDefaultProducts : function() {
+      this.productList = JSON.parse(JSON.stringify(this.defaultProductList));
     }
   });
 })();

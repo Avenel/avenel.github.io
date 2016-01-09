@@ -86,7 +86,7 @@
     <!-- Produkt Eingabe -->
     <neon-animated-pages id="pages" selected="{{selected}}" class="expenseInputContainer">
       <neon-animatable style="text-align: center;">
-        <paper-button id="openAddExpenseDialogButton" raised>
+        <paper-button id="openAddExpenseDialogButton" raised on-tap="openAddExpenseDialog">
           <iron-icon icon="add"></iron-icon> Ausgaben hinzufügen
         </paper-button>
 
@@ -104,7 +104,7 @@
             </iron-list>
           </paper-material>
         </div>
-        <paper-fab icon="check" id="submitShoppingListButton"></paper-fab>
+        <paper-fab icon="check" id="submitShoppingListButton" on-tap="submitShoppingList"></paper-fab>
       </neon-animatable>
 
       <neon-animatable>
@@ -126,7 +126,7 @@
           </tr>
           <tr>
             <td>
-              <haushaltsbuch-select-product-list product-input="[[productInput]]" product="{{product}}" category="[[category]]" sub-Category="[[subCategory]]"></haushaltsbuch-select-product-list>
+              <haushaltsbuch-select-product-list id="selectProductList" product-input="[[productInput]]" product="{{product}}" category="[[category]]" sub-Category="[[subCategory]]"></haushaltsbuch-select-product-list>
             </td>
           </tr>
         </table>
@@ -141,8 +141,9 @@
         </div>
 
         <div class="buttons" id="addExpenseActions">
-          <paper-button id="cancelAddExpense">Abbrechen</paper-button>
-          <paper-button id="addExpenseButton" autofocus>Hinzufügen</paper-button>
+          <paper-button id="cancelAddExpense" on-tap="cancelAddExpense">Abbrechen</paper-button>
+          <paper-button id="saveProductButton" on-tap="saveProduct">Merken</paper-button>
+          <paper-button id="addExpenseButton" autofocus on-tap= "addExpense">Hinzufügen</paper-button>
         </div>
       </neon-animatable>
 
@@ -199,11 +200,6 @@
         notify: true
       },
 
-      buttonFunctionIcon : {
-        type: String,
-        value: "add"
-      },
-
       expenses : {
         type: Array
       },
@@ -221,21 +217,6 @@
     },
 
     ready : function() {
-      this.$.productInput.addEventListener("focus", this.toggleIconToAdd.bind(this));
-      this.$.productInput.addEventListener("blur", this.toggleIconToCheck.bind(this));
-
-      this.$.productAmountInput.addEventListener("focus", this.toggleIconToAdd.bind(this));
-      this.$.productAmountInput.addEventListener("blur", this.toggleIconToCheck.bind(this));
-
-      this.$.productPriceInput.addEventListener("focus", this.toggleIconToAdd.bind(this));
-      this.$.productPriceInput.addEventListener("blur", this.toggleIconToCheck.bind(this));
-
-
-      this.$.submitShoppingListButton.addEventListener("click", this.submitShoppingList.bind(this));
-      this.$.openAddExpenseDialogButton.addEventListener("click", this.openAddExpenseDialog.bind(this));
-      this.$.addExpenseButton.addEventListener("click", this.addExpense.bind(this));
-
-      this.$.cancelAddExpense.addEventListener("click", this.cancelAddExpense.bind(this));
     },
 
     attached : function() {
@@ -287,6 +268,15 @@
 
     toggleIconToCheck : function() {
       this.buttonFunctionIcon = "check";
+    },
+
+    saveProduct : function() {
+      var product = {};
+      product.name = this.productInput;
+      product.category = this.productCategory.name;
+      product.subcategory = ""; //TODO
+
+      this.$.selectProductList.saveProduct(product);
     },
 
     addExpense : function() {
