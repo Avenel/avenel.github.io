@@ -5,7 +5,7 @@
 </style>
 
   <template>
-    <i class$="{{computeClass}}"></i>
+    <i id="iconElement"></i>
   </template>
 
 <script>
@@ -57,22 +57,26 @@
     },
 
     ready : function() {
-
+      $(this.$.iconElement).addClass(this._computeClass());
     },
 
     attached : function() {
+      $(this.$.iconElement).addClass(this._computeClass());
     },
 
     _computeClass: function() {
-      return "fa fa-" + this.icon + " " +
-          (this.animation ? 'fa-' + 'animation' : '') + " " +
-          (this.size ? 'fa-' + this.size : '') + " " +
-          (this.rotate ? 'fa-rotate-' + this.rotate : '') + " " +
-          (this.flip ? 'fa-flip-' + this.flip : '') + " " +
-          (this.inverse ? 'fa-inverse' : '') + " " +
-          (this.stack ? 'fa-stack-' + this.stack : '') +
-          (this.pull_left ? 'pull-left' : '') + " " +
-          (this.border ? 'fa-border' : '');
+      $(this.$.iconElement).addClass("fa");
+      $(this.$.iconElement).addClass("fa-" + this.icon);
+      (this.size ? $(this.$.iconElement).addClass('fa-' + this.size) : "");
+      (this.animation ? $(this.$.iconElement).addClass('fa-' + 'animation ') : '');
+      (this.rotate ? $(this.$.iconElement).addClass('fa-rotate-' + this.rotate) : '');
+      (this.flip ? $(this.$.iconElement).addClass('fa-flip-' + this.flip) : '');
+      (this.inverse ? $(this.$.iconElement).addClass('fa-inverse ') : '');
+      (this.stack ? $(this.$.iconElement).addClass('fa-stack-' + this.stack) : '');
+      (this.pull_left ? $(this.$.iconElement).addClass('pull-left ') : '');
+      (this.border ? $(this.$.iconElement).addClass('fa-border') : '');
+
+      return "";
     }
   });
 })();

@@ -2,7 +2,7 @@
 <style>
 
   .expenseInputContainer {
-    width: 85%;
+    width: 95%;
     margin: 5% auto;
   }
 
@@ -56,6 +56,7 @@
 
   #addExpenseActions {
     float: right;
+    margin-top: 20px;
   }
 
   #selectCategoryIconWrapper {
@@ -94,11 +95,14 @@
           <paper-material id="expenseListWrapper">
             <iron-list items="{{expenseList}}" as="item" id="expenseList">
               <template>
-                  <div class="item horizontal layout around justified wrap">
+                  <div class="item horizontal layout around justified">
                     <div>{{item.amount}}<span>x</span></div>
                     <div>{{item.price}}<span>€</span></div>
                     <div>{{item.product.name}}</div>
                     <div>{{_formatProductTotal(item.total)}}<span>€</span></div>
+                    <div><paper-button id="removeExpense" on-tap="removeExpense">
+                        <polymer-fontawesome icon="close" size="1x"></polymer-fontawesome>
+                    </paper-button></div>
                   </div>
               </template>
             </iron-list>
@@ -141,9 +145,9 @@
         </div>
 
         <div class="buttons" id="addExpenseActions">
-          <paper-button id="cancelAddExpense" on-tap="cancelAddExpense">Abbrechen</paper-button>
-          <paper-button id="saveProductButton" on-tap="saveProduct">Merken</paper-button>
-          <paper-button id="addExpenseButton" autofocus on-tap= "addExpense">Hinzufügen</paper-button>
+          <paper-button id="saveProductButton" on-tap="saveProduct"><polymer-fontawesome icon="save" size="2x"></polymer-fontawesome></paper-button>
+          <paper-button id="cancelAddExpense" on-tap="cancelAddExpense"><polymer-fontawesome icon="close" size="2x"></polymer-fontawesome></paper-button>
+          <paper-button id="addExpenseButton" autofocus on-tap= "addExpense"><polymer-fontawesome icon="check" size="2x"></polymer-fontawesome></paper-button>
         </div>
       </neon-animatable>
 
@@ -301,6 +305,13 @@
         this.productCategory = null;
 
         this.selected = 0;
+      }
+    },
+
+    removeExpense: function(e) {
+      var index = this.expenseList.indexOf(e.model.item);
+      if (index > -1) {
+        this.splice("expenseList", index, 1);
       }
     },
 
