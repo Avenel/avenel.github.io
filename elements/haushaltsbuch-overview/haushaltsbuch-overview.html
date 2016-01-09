@@ -53,13 +53,27 @@
         margin-top: 5px;
     }
 
-    #total {
-      font-size: x-large;
+    #totalCardsWrapper {
+      @apply(--layout-horizontal);
+      @apply(--layout-justified);
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    #totalCard {
+    .totalCard {
+      @apply(--layout-flex);
+      height: 130px;
+      margin: 5px;
+    }
+
+    .diffCard {
       width: 100%;
       height: 130px;
+      margin: 5px;
+    }
+
+    .totalCard .total {
+      font-size: x-large;
     }
 
     h1 {
@@ -86,12 +100,28 @@
 
       <h1>Übersicht</h1>
 
-      <paper-card  id = "totalCard">
+      <paper-card  class = "diffCard totalCard">
         <div class="card-content">
-          <haushaltsbuch-select-category-button icon="shopping-basket" name="Gesamt" no-margin></haushaltsbuch-select-category-button>
-          <div id="total">{{_formatPrice(ausgabenGesamt)}}<span>€</span></div>
+          <haushaltsbuch-select-category-button icon="money" name="Differenz" no-margin></haushaltsbuch-select-category-button>
+          <div class="total">{{_formatPrice(diffGesamt)}}<span>€</span></div>
         </div>
       </paper-card>
+
+      <div id="totalCardsWrapper">
+        <paper-card  class = "totalCard">
+          <div class="card-content">
+            <haushaltsbuch-select-category-button icon="minus" name="Ausgaben" no-margin></haushaltsbuch-select-category-button>
+            <div class="total">{{_formatPrice(ausgabenGesamt)}}<span>€</span></div>
+          </div>
+        </paper-card>
+
+        <paper-card  class = "totalCard">
+          <div class="card-content">
+            <haushaltsbuch-select-category-button icon="plus" name="Einnahmen" no-margin></haushaltsbuch-select-category-button>
+            <div class="total">{{_formatPrice(einnahmenGesamt)}}<span>€</span></div>
+          </div>
+        </paper-card>
+      </div>
 
       <div id="cards">
         <template is="dom-repeat" items="[[cards]]" as="item">
@@ -117,6 +147,16 @@
       ausgabenGesamt: {
         type: Number,
         value: 0.0
+      },
+
+      einnahmenGesamt: {
+        type: Number,
+        value: 0.0
+      },
+
+      diffGesamt: {
+        type: Number,
+        computed: "_computeDiffGesamt(einnahmenGesamt, ausgabenGesamt)"
       },
 
       expenses: {
@@ -168,6 +208,10 @@
 
     _formatPrice : function(price) {
       return parseFloat(price / 100).toFixed(2);
+    },
+
+    _computeDiffGesamt : function(einnahmenGesamt, ausgabenGesamt) {
+      return einnahmenGesamt - ausgabenGesamt;
     },
 
     reload : function() {
