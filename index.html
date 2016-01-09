@@ -116,9 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <span class="title">Katin's Haushaltsbuch</span>
 
           <!-- Toolbar icons -->
-          <a data-route="create_expense" href="/create_expense" style="color: white;">
-            <paper-icon-button icon="create"></paper-icon-button>
-          </a>
+          <paper-icon-button icon="create" on-tap="openCreateDialog"></paper-icon-button>
 
           <!-- Application name
           <div class="middle middle-container center horizontal layout">
@@ -184,6 +182,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </platinum-sw-cache>
     </platinum-sw-register>
     -->
+
+    <paper-dialog id="createDialog" modal>
+      <h2>Ein- bzw. Ausgabe erfassen</h2>
+      <div class="buttons">
+        <paper-button on-tap="redirectToCreateIncome">Einnahme</paper-button>
+        <paper-button on-tap="redirectToCreateExpense">Ausgabe</paper-button>
+      </div>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Abbrechen</paper-button>
+      </div>
+    </paper-dialog>
 
   </template>
 

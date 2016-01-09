@@ -98,8 +98,6 @@
 
     <div id="cardsContainer">
 
-      <h1>Übersicht</h1>
-
       <paper-card  class = "diffCard totalCard">
         <div class="card-content">
           <haushaltsbuch-select-category-button icon="money" name="Differenz" no-margin></haushaltsbuch-select-category-button>
@@ -108,7 +106,7 @@
       </paper-card>
 
       <div id="totalCardsWrapper">
-        <paper-card  class = "totalCard">
+        <paper-card  class = "totalCard" on-tap="openAddExpense">
           <div class="card-content">
             <haushaltsbuch-select-category-button icon="minus" name="Ausgaben" no-margin></haushaltsbuch-select-category-button>
             <div class="total">{{_formatPrice(ausgabenGesamt)}}<span>€</span></div>
@@ -216,6 +214,10 @@
 
     reload : function() {
       this.$.localstorage.reload();
+    },
+
+    openAddExpense : function() {
+      page.redirect("/ausgaben");
     }
   });
 })();

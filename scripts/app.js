@@ -25,6 +25,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     console.log('Our app is ready to rock!');
   });
 
+  app.openCreateDialog = function() {
+    app.$.createDialog.toggle();
+  };
+
+  app.redirectToCreateExpense = function() {
+    app.$.createDialog.toggle();
+    page.redirect("/create_expense");
+  };
+
+  app.redirectToCreateIncome = function() {
+    app.$.createDialog.toggle();
+    page.redirect("/create_income");
+  };
+
   // See https://github.com/Polymer/polymer/issues/1381
   window.addEventListener('WebComponentsReady', function() {
     // imports are loaded and elements have been registered
